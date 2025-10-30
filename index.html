@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lavender Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #E6E6FA; /* Lavender background */
+        }
+        .calculator {
+            background: #fff; /* White calculator body */
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(138, 43, 226, 0.3);
+        }
+        .display {
+            width: 260px;
+            height: 50px;
+            margin-bottom: 15px;
+            font-size: 24px;
+            text-align: right;
+            padding: 10px;
+            border: 2px solid #D8BFD8; /* Thistle border */
+            border-radius: 10px;
+            background: #F8F8FF; /* GhostWhite display */
+            color: #4B0082; /* Indigo text */
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 60px);
+            gap: 10px;
+        }
+        button {
+            padding: 15px;
+            font-size: 18px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background: #E6E6FA; /* Lavender buttons */
+            color: #4B0082; /* Indigo text */
+            transition: 0.2s;
+        }
+        button:hover {
+            background: #D8BFD8; /* Thistle hover */
+        }
+        button.operator {
+            background: #9370DB; /* Medium Purple */
+            color: #fff;
+        }
+        button.operator:hover {
+            background: #8A2BE2; /* BlueViolet hover */
+        }
+        button.equal {
+            background: #6A5ACD; /* Slate Blue */
+            color: #fff;
+            grid-column: span 2;
+        }
+        button.equal:hover {
+            background: #483D8B; /* Dark Slate Blue hover */
+        }
+        button.clear {
+            background: #FFB6C1; /* LightPink */
+            color: #fff;
+            grid-column: span 2;
+        }
+        button.clear:hover {
+            background: #FF69B4; /* HotPink hover */
+        }
+    </style>
+</head>
+<body>
+
+<div class="calculator">
+    <input type="text" class="display" id="display" disabled>
+
+    <div class="buttons">
+        <button onclick="appendNumber('7')">7</button>
+        <button onclick="appendNumber('8')">8</button>
+        <button onclick="appendNumber('9')">9</button>
+        <button class="operator" onclick="setOperation('/')">÷</button>
+
+        <button onclick="appendNumber('4')">4</button>
+        <button onclick="appendNumber('5')">5</button>
+        <button onclick="appendNumber('6')">6</button>
+        <button class="operator" onclick="setOperation('*')">×</button>
+
+        <button onclick="appendNumber('1')">1</button>
+        <button onclick="appendNumber('2')">2</button>
+        <button onclick="appendNumber('3')">3</button>
+        <button class="operator" onclick="setOperation('-')">-</button>
+
+        <button onclick="appendNumber('0')">0</button>
+        <button onclick="appendNumber('.')">.</button>
+        <button class="equal" onclick="calculate()">=</button>
+        <button class="operator" onclick="setOperation('+')">+</button>
+
+        <button class="clear" onclick="clearDisplay()">C</button>
+    </div>
+</div>
+
+<script>
+    let currentInput = '';
+    let previousInput = '';
+    let operator = null;
+
+    const display = document.getElementById('display');
+
+    function appendNumber(number) {
+        if (number === '.' && currentInput.includes('.')) return;
+        currentInput += number;
+        updateDisplay();
+    }
+
+    function setOperation(op) {
+        if (currentInput === '') return;
+        if (previousInput !== '') calculate();
+        operator = op;
+        previousInput = currentInput;
+        currentInput = '';
+    }
+
+    function calculate() {
+        let result;
+        const prev = parseFloat(previousInput);
+        const curr = parseFloat(currentInput);
+
+        if (isNaN(prev) || isNaN(curr)) return;
+
+        switch(operator) {
+            case '+':
+                result = prev + curr;
+                break;
+            case '-':
+                result = prev - curr;
+                break;
+            case '*':
+                result = prev * curr;
+                break;
+            case '/':
+                if (curr === 0) {
+                    result = "Error! Division by zero";
+                } else {
+                    result = prev / curr;
+                }
+                break;
+            default:
+                return;
+        }
+
+        currentInput = result.toString();
+        operator = null;
+        previousInput = '';
+        updateDisplay();
+    }
+
+    function clearDisplay() {
+        currentInput = '';
+        previousInput = '';
+        operator = null;
+        updateDisplay();
+    }
+
+    function updateDisplay() {
+        display.value = currentInput;
+    }
+</script>
+
+</body>
+</html>
